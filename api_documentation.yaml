@@ -1,0 +1,83 @@
+openapi : 3.1.0
+info:
+  title : Pulse And Bloom API
+  version : 1.0.0
+  description : class scheduling and booking
+servers:
+  - url : https://api.pulseandbloom.com/v1
+    description : production server
+paths: 
+  /class/{class_id}:
+    get:
+      summary : gets class info
+      tags:
+        - class
+      parameters:
+        - name : class_id
+          in : path
+          required : true
+          description : unique class uuid
+          schema:
+            type : string
+            format : integer
+      responses:
+        '200':
+          description : class_id data recieved
+          content:
+            application/json:
+              schema:
+                $ref : '#/components/schemas/ClassInfo'
+        '404':
+          $ref : '#/components/responses/NotFound'
+components:
+  schemas:
+    ClassInfo:
+      type : object
+      required:
+        - id
+        - title
+        - time
+        - instructor_name
+        - timing
+        - duration
+        - location
+        - remaining_spots
+      properties:
+        id:
+          type : string
+        title:
+          type : string
+          examples : "yoga"
+        time:
+          type : string
+          format : date-time
+          examples : "2026-10-01T10:00:00Z"
+        instructor_name:
+          type : string
+          examples : "yuna"
+        timing:
+          type : string
+          examples : "12 pm"
+        duration:
+          type : string
+          examples : "1hr"
+        location:
+          type : string
+          examples : "florida"
+        remaining_spots:
+          type : integer
+          examples : "12"
+
+  responses:
+    NotFound:
+      description : the class resource was not found
+      content:
+        application/json:
+          schema:
+            type : object
+            required:
+              - error
+            properties:
+              error:
+                type : string
+                examples : "class not found"
